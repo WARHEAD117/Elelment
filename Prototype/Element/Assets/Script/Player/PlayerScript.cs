@@ -15,7 +15,7 @@ public class PlayerScript : MonoBehaviour {
 
         cc = GetComponent<CharacterController>();
     }
-
+    Vector3 moveDir = new Vector3();
     // Update is called once per frame
     void Update()
     {
@@ -29,7 +29,7 @@ public class PlayerScript : MonoBehaviour {
 
         Debug.Log(h + "--" + v);
 
-        Vector3 moveDir = new Vector3();
+        
         if (cc.isGrounded)
         {
             Vector3 cameraForward = Camera.main.transform.forward;
@@ -43,14 +43,15 @@ public class PlayerScript : MonoBehaviour {
             //水平に入力はカメラの左右方向、垂直入力はカメラの前後方向に移動
             moveDir = h * cameraRight + v * cameraForward;
             moveDir = moveDir.normalized;
+
+            moveDir *= PlayerSpeed;
+
+            moveDir.y = -0.001f;
         }
         else
         {
 
         }
-
-        moveDir *= PlayerSpeed;
-
         //球面補間でプレイヤーの向き変化を自然にする
         Vector3 rotateBeforeDir = transform.forward;
         rotateBeforeDir.y = 0;
@@ -75,10 +76,11 @@ public class PlayerScript : MonoBehaviour {
         UpdateRod();
         if (PlayerPower)
         {
-            if (Input.GetKey(KeyCode.G))
+            if (PlayerContainer.CanRelease() && Input.GetKey(KeyCode.G))
             {
                 UsePower();
                 PlayerPower.gameObject.SetActive(true);
+                PlayerContainer.ReleaseElement();
             }
             else
             {
@@ -93,10 +95,12 @@ public class PlayerScript : MonoBehaviour {
         if (!PlayerRod || !PlayerContainer)
             return;
 
-        if(Input.GetKeyDown(KeyCode.F))
+        if(Input.GetKey(KeyCode.F) && PlayerRod.CanGetElement)
         {
             Color RodColor = PlayerRod.GetElementColor();
             PlayerContainer.SetElementColor(RodColor);
+
+            PlayerContainer.KeepGetElement();
         }
     }
 
@@ -107,5 +111,6 @@ public class PlayerScript : MonoBehaviour {
 
         Color ContainerColor = PlayerContainer.GetElementColor();
         PlayerPower.SetElementColor(ContainerColor);
+
     }
 }
