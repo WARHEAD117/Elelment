@@ -8,6 +8,8 @@ public class RodScript : MonoBehaviour {
     public Material RodMaterial;
 
     Color ElementColor = Color.white;
+    ElementType RodElement;
+
     public bool CanGetElement { get; set; }
 
     // Use this for initialization
@@ -25,7 +27,8 @@ public class RodScript : MonoBehaviour {
             //if (collider.gameObject.tag != "Ground" && !collider.isTrigger && collider.gameObject.tag != "Player")
             {
                 MeshRenderer mr = collider.gameObject.GetComponent<MeshRenderer>();
-                if(mr)
+                ElementScript es = collider.gameObject.GetComponent<ElementScript>();
+                if (mr && es)
                 {
                     ColliderList.Add(collider.gameObject);
                     //ElementColor = mr.material.color;
@@ -49,17 +52,21 @@ public class RodScript : MonoBehaviour {
             }
 
             MeshRenderer mr = closestObj.GetComponent<MeshRenderer>();
-            if (mr)
+            ElementScript es = closestObj.gameObject.GetComponent<ElementScript>();
+            if (mr && es)
             {
                 CanGetElement = true;
-                ElementColor = mr.material.color;
-                DrawLine(RodSensor.transform.position, closestObj.transform.position, new Color(1, 0, 0, 1), ElementColor);
+                RodElement = es.GetElementType();
+                ElementColor = ElementDefine.GetElementColor(RodElement);
+
+                DrawLine(RodSensor.transform.position, closestObj.transform.position, ElementColor, ElementColor);
             }
         }
         else
         {
             CanGetElement = false;
-            ElementColor = Color.black;
+            RodElement = ElementType.NONE;
+            ElementColor = ElementDefine.GetElementColor(RodElement);
             RemoveLine();
         }
 
@@ -67,10 +74,14 @@ public class RodScript : MonoBehaviour {
 
 
     }
-    
+
     public Color GetElementColor()
     {
         return ElementColor;
+    }
+    public ElementType GetElement()
+    {
+        return RodElement;
     }
 
     void RemoveLine()

@@ -98,7 +98,8 @@ public class PlayerScript : MonoBehaviour {
         if(Input.GetKey(KeyCode.F) && PlayerRod.CanGetElement)
         {
             Color RodColor = PlayerRod.GetElementColor();
-            PlayerContainer.SetElementColor(RodColor);
+            ElementType RodElement = PlayerRod.GetElement();
+            PlayerContainer.SetContainerElement(RodElement);
 
             PlayerContainer.KeepGetElement();
         }
@@ -109,8 +110,9 @@ public class PlayerScript : MonoBehaviour {
         if (!PlayerRod || !PlayerContainer)
             return;
 
-        Color ContainerColor = PlayerContainer.GetElementColor();
-        PlayerPower.SetElementColor(ContainerColor);
+        ElementType ContainerElement = PlayerContainer.GetContainerElement();
+        PlayerPower.SetElement(ContainerElement);
 
+        PlayerPower.UsePower();
     }
 }

@@ -7,6 +7,8 @@ public class ContainerScript : MonoBehaviour {
     public Material ContainerMat;
     Color ElementColor;
     Color ElementBaseColor = Color.black;
+    ElementType ContainerElement;
+    ElementType ContainerElementBase = ElementType.NONE;
     public float curElementValue = 0;
     public float maxElementValue = 100;
     public float getElementSpeed = 50;
@@ -20,21 +22,21 @@ public class ContainerScript : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
         //ContainerMat.color = ElementColor;
-
+        ElementColor = ElementDefine.GetElementColor(ContainerElement);
         ContainerMat.color = Color.Lerp(ElementBaseColor, ElementColor, curElementValue / maxElementValue);
 
     }
 
-    public Color GetElementColor()
+    public ElementType GetContainerElement()
     {
-        return ElementColor;
+        return ContainerElement;
     }
 
-    public void SetElementColor(Color RodColor)
+    public void SetContainerElement(ElementType element)
     {
-        if(ElementColor != RodColor)
+        if (ContainerElement != element)
         {
-            ElementColor = RodColor;
+            ContainerElement = element;
             curElementValue = 0;
         }
     }
