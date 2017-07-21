@@ -28,7 +28,7 @@ public class RodScript : MonoBehaviour {
             {
                 MeshRenderer mr = collider.gameObject.GetComponent<MeshRenderer>();
                 ElementScript es = collider.gameObject.GetComponent<ElementScript>();
-                if (mr && es)
+                if (es)
                 {
                     ColliderList.Add(collider.gameObject);
                     //ElementColor = mr.material.color;
@@ -53,7 +53,7 @@ public class RodScript : MonoBehaviour {
 
             MeshRenderer mr = closestObj.GetComponent<MeshRenderer>();
             ElementScript es = closestObj.gameObject.GetComponent<ElementScript>();
-            if (mr && es)
+            if (es)
             {
                 CanGetElement = true;
                 RodElement = es.GetElementType();

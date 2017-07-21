@@ -37,7 +37,7 @@ public class PowerScript : MonoBehaviour {
             {
                 MeshRenderer mr = collider.gameObject.GetComponent<MeshRenderer>();
                 ElementScript es = collider.gameObject.GetComponent<ElementScript>();
-                if (mr && es)
+                if (es)
                 {
                     ColliderList.Add(collider.gameObject);
                     //ElementColor = mr.material.color;

@@ -23,6 +23,7 @@ public struct ElementDefine {
                 elementColor = Color.white;
                 break;
             case ElementType.THUNDER:
+                elementColor = new Color(0.86f, 0.80f, 0.0f);
                 break;
             case ElementType.NONE:
                 elementColor = Color.black;

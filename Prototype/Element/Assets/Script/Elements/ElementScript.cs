@@ -25,14 +25,23 @@ public class ElementScript : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 
-        MeshRenderer mr = gameObject.GetComponent<MeshRenderer>();
-        if (mr)
+        if(m_ElementType == ElementType.ICE)
         {
-            Color ElementColor = ElementDefine.GetElementColor(m_ElementType);
-            ElementColor = ElementColor * ElementValue / MaxElementValue;
-
-            mr.material.color = ElementColor;
+            float elementScale = ElementValue / MaxElementValue;
+            this.transform.localScale = new Vector3(elementScale,elementScale,elementScale);
         }
+        else
+        {
+            MeshRenderer mr = gameObject.GetComponent<MeshRenderer>();
+            if (mr)
+            {
+                Color ElementColor = ElementDefine.GetElementColor(m_ElementType);
+                ElementColor = ElementColor * ElementValue / MaxElementValue;
+
+                mr.material.color = ElementColor;
+            }
+        }
+        
 		
         if(ElementValue <= 0)
         {
@@ -72,6 +81,22 @@ public class ElementScript : MonoBehaviour {
             {
                 ElementValue -= ElementDownSpeed * Time.deltaTime;
                 ElementValue = ElementValue < 0 ? 0 : ElementValue;
+            }
+        } 
+        if (m_ElementType == ElementType.ICE)
+        {
+            if (powerElement == ElementType.FIRE)
+            {
+                ElementValue -= ElementDownSpeed * Time.deltaTime;
+                ElementValue = ElementValue < 0 ? 0 : ElementValue;
+            }
+        }
+        if (m_ElementType == ElementType.GRASS)
+        {
+            if (powerElement == ElementType.THUNDER)
+            {
+                m_ElementType = ElementType.FIRE;
+                ElementValue = MaxElementValue;
             }
         }
     }
