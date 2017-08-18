@@ -10,6 +10,14 @@ public class PlayerScript : MonoBehaviour {
     public PowerScript PlayerPower;
     public float PlayerSpeed = 10.0f;
     public float PlayerGravity = 15.0f;
+
+    public float ShootValue = 10;
+
+    public float CooldownTime = 1.0f;
+    float CooldownTimer = 0;
+
+    int CoinCount = 0;
+
     // Use this for initialization
     void Start () {
 
@@ -76,18 +84,43 @@ public class PlayerScript : MonoBehaviour {
         UpdateRod();
         if (PlayerPower)
         {
-            if (PlayerContainer.CanRelease() && Input.GetKey(KeyCode.G))
+            CooldownTimer -= Time.deltaTime;
+            CooldownTimer = CooldownTimer < 0 ? 0 : CooldownTimer;
+            Debug.Log(CooldownTimer);
+            if (PlayerContainer.CanRelease(ShootValue) && Input.GetKeyDown(KeyCode.G))
             {
-                UsePower();
-                PlayerPower.gameObject.SetActive(true);
-                PlayerContainer.ReleaseElement();
+                if (CooldownTimer == 0)
+                {
+                    PlayerContainer.ReleaseElement(ShootValue);
+                    UsePower(ShootValue);
+                    //PlayerPower.gameObject.SetActive(true);
+                    CooldownTimer = CooldownTime;
+                }
+        
             }
             else
             {
                 PlayerPower.gameObject.SetActive(false);
             }
         }
+
+        if(leaveInTrigger && leaveOutTrigger)
+        {
+            if(inDoorObj == outDoorObj)
+            {
+                ResetElement();
+            }
+        }
         
+    }
+    private void ResetElement()
+    {
+        leaveInTrigger = false;
+        leaveOutTrigger = false;
+        inDoorObj = null;
+        outDoorObj = null;
+
+        PlayerContainer.ResetElement();
     }
 
     private void UpdateRod()
@@ -105,7 +138,7 @@ public class PlayerScript : MonoBehaviour {
         }
     }
 
-    private void UsePower()
+    private void UsePower(float shootValue)
     {
         if (!PlayerRod || !PlayerContainer)
             return;
@@ -113,6 +146,58 @@ public class PlayerScript : MonoBehaviour {
         ElementType ContainerElement = PlayerContainer.GetContainerElement();
         PlayerPower.SetElement(ContainerElement);
 
-        PlayerPower.UsePower();
+        PlayerPower.UsePower(shootValue);
+    }
+
+    public float GetElementValue()
+    {
+
+        float elementValue = PlayerContainer.GetElementValue();
+        return elementValue;
+
+    }
+    public float GetMaxElementValue()
+    {
+
+        float maxElementValue = PlayerContainer.GetMaxElementValue();
+        return maxElementValue;
+
+    }
+    public ElementType GetElementType()
+    {
+
+        ElementType elementType = PlayerContainer.GetElementType();
+        return elementType;
+
+    }
+
+    private bool leaveOutTrigger = false;
+    private bool leaveInTrigger = false;
+    private GameObject outDoorObj;
+    private GameObject inDoorObj;
+    void OnTriggerExit(Collider other)
+    {
+        string name = other.name;
+        if (name == "In")
+        {
+            leaveInTrigger = true;
+            inDoorObj = other.transform.parent.gameObject;
+        }
+        if (name == "Out")
+        {
+            leaveOutTrigger = true;
+            outDoorObj = other.transform.parent.gameObject;
+        }
+
+        if (other.tag == "Coin")
+        {
+            CoinCount++;
+            Destroy(other.gameObject);
+        }
+    }
+
+    public int GetCoinCount()
+    {
+        return CoinCount;
     }
 }

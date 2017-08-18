@@ -5,7 +5,11 @@ using UnityEngine;
 public class RodScript : MonoBehaviour {
 
     public GameObject RodSensor;
+    public MeshRenderer RodRenderer;
+    public GameObject RodForward;
     public Material RodMaterial;
+
+    public float RodSensorAngle = 90;
 
     Color ElementColor = Color.white;
     ElementType RodElement;
@@ -19,8 +23,8 @@ public class RodScript : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-        Collider[] RodSensorColliders = Physics.OverlapSphere(RodSensor.transform.position, 3.0f);
-        List<GameObject> ColliderList = new List<GameObject>();
+        Collider[] RodSensorColliders = Physics.OverlapSphere(RodSensor.transform.position, 1.0f);
+        List<Collider> ColliderList = new List<Collider>();
         foreach (Collider collider in RodSensorColliders)
         {
             if (collider.gameObject.tag == "Element" && !collider.isTrigger)
@@ -30,20 +34,24 @@ public class RodScript : MonoBehaviour {
                 ElementScript es = collider.gameObject.GetComponent<ElementScript>();
                 if (es)
                 {
-                    ColliderList.Add(collider.gameObject);
-                    //ElementColor = mr.material.color;
+                    {
+                        //DrawLine(RodSensor.transform.position, hitPoint, ElementColor, ElementColor);
+                        ColliderList.Add(collider);
+                        //ElementColor = mr.material.color;
+                    }
                 }
-                break;
             }
         }
 
         if(ColliderList.Count > 0)
         {
             float minDis = 100.0f;
-            GameObject closestObj = ColliderList[0];
-            foreach (GameObject collider in ColliderList)
+            Collider closestObj = ColliderList[0];
+            foreach (Collider collider in ColliderList)
             {
-                float dis = Vector3.Distance(collider.transform.position, RodSensor.transform.position);
+                Vector3 hitPoint = collider.ClosestPoint(RodSensor.transform.position);
+                hitPoint.y = RodSensor.transform.position.y;
+                float dis = Vector3.Distance(hitPoint, RodSensor.transform.position);
                 if (dis < minDis)
                 {
                     minDis = dis;
@@ -51,7 +59,7 @@ public class RodScript : MonoBehaviour {
                 }
             }
 
-            MeshRenderer mr = closestObj.GetComponent<MeshRenderer>();
+            MeshRenderer mr = closestObj.gameObject.GetComponent<MeshRenderer>();
             ElementScript es = closestObj.gameObject.GetComponent<ElementScript>();
             if (es)
             {
@@ -59,7 +67,8 @@ public class RodScript : MonoBehaviour {
                 RodElement = es.GetElementType();
                 ElementColor = ElementDefine.GetElementColor(RodElement);
 
-                DrawLine(RodSensor.transform.position, closestObj.transform.position, ElementColor, ElementColor);
+                Vector3 hitPoint = closestObj.ClosestPoint(RodSensor.transform.position);
+                DrawLine(RodSensor.transform.position, hitPoint, ElementColor, ElementColor);
             }
         }
         else
@@ -70,7 +79,8 @@ public class RodScript : MonoBehaviour {
             RemoveLine();
         }
 
-        RodMaterial.color = ElementColor;
+        RodRenderer.material.color = ElementColor;
+        //RodMaterial.color = ElementColor;
 
 
     }

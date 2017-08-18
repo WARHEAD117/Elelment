@@ -25,6 +25,9 @@ public struct ElementDefine {
             case ElementType.THUNDER:
                 elementColor = new Color(0.86f, 0.80f, 0.0f);
                 break;
+            case ElementType.WATERICE:
+                elementColor = Color.white;
+                break;
             case ElementType.NONE:
                 elementColor = Color.black;
                 break;
@@ -53,6 +56,9 @@ public struct ElementDefine {
                 speed = 50;
                 break;
             case ElementType.THUNDER:
+                break;
+            case ElementType.WATERICE:
+                speed = 0;
                 break;
             case ElementType.NONE:
                 speed = 0;

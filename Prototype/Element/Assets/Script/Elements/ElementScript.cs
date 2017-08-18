@@ -9,6 +9,7 @@ public enum ElementType
     THUNDER,
     GRASS,
     ICE,
+    WATERICE,
     NONE
 }
 
@@ -63,6 +64,48 @@ public class ElementScript : MonoBehaviour {
     {
 
     }
+    public void SetPowerElement(ElementType powerElement, float elementValue)
+    {
+        if (m_ElementType == ElementType.FIRE)
+        {
+            if (powerElement == ElementType.WATER)
+            {
+                ElementValue -= elementValue;
+                ElementValue = ElementValue < 0 ? 0 : ElementValue;
+            }
+        }
+        if (m_ElementType == ElementType.GRASS)
+        {
+            if (powerElement == ElementType.FIRE)
+            {
+                ElementValue -= elementValue;
+                ElementValue = ElementValue < 0 ? 0 : ElementValue;
+            }
+        }
+        if (m_ElementType == ElementType.ICE)
+        {
+            if (powerElement == ElementType.FIRE)
+            {
+                ElementValue -= elementValue;
+                ElementValue = ElementValue < 0 ? 0 : ElementValue;
+            }
+        }
+        if (m_ElementType == ElementType.GRASS)
+        {
+            if (powerElement == ElementType.THUNDER)
+            {
+                m_ElementType = ElementType.FIRE;
+                ElementValue = MaxElementValue;
+            }
+        } if (m_ElementType == ElementType.WATER)
+        {
+            if (powerElement == ElementType.ICE)
+            {
+                m_ElementType = ElementType.WATERICE;
+                ElementValue = MaxElementValue;
+            }
+        }
+    }
     public void SetPowerElement(ElementType powerElement)
     {
 
@@ -96,6 +139,13 @@ public class ElementScript : MonoBehaviour {
             if (powerElement == ElementType.THUNDER)
             {
                 m_ElementType = ElementType.FIRE;
+                ElementValue = MaxElementValue;
+            }
+        } if (m_ElementType == ElementType.WATER)
+        {
+            if (powerElement == ElementType.ICE)
+            {
+                m_ElementType = ElementType.WATERICE;
                 ElementValue = MaxElementValue;
             }
         }

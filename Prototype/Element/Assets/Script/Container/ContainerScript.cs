@@ -16,7 +16,7 @@ public class ContainerScript : MonoBehaviour {
 
     // Use this for initialization
     void Start () {
-		
+        ContainerElement = ElementType.NONE;
 	}
 	
 	// Update is called once per frame
@@ -25,6 +25,19 @@ public class ContainerScript : MonoBehaviour {
         ElementColor = ElementDefine.GetElementColor(ContainerElement);
         ContainerMat.color = Color.Lerp(ElementBaseColor, ElementColor, curElementValue / maxElementValue);
 
+    }
+
+    public ElementType GetElementType()
+    {
+        return ContainerElement;
+    }
+    public float GetElementValue()
+    {
+        return curElementValue;
+    }
+    public float GetMaxElementValue()
+    {
+        return maxElementValue;
     }
 
     public ElementType GetContainerElement()
@@ -45,11 +58,15 @@ public class ContainerScript : MonoBehaviour {
     {
         return curElementValue > 0 ? true : false;
     }
+    public bool CanRelease(float shootValue)
+    {
+        return curElementValue > shootValue ? true : false;
+    }
 
     public void KeepGetElement()
     {
         if (curElementValue < maxElementValue)
-            curElementValue += getElementSpeed * Time.deltaTime;
+            curElementValue += (int)(getElementSpeed * Time.deltaTime);
         else
             curElementValue = maxElementValue;
     }
@@ -60,5 +77,16 @@ public class ContainerScript : MonoBehaviour {
             curElementValue -= releaseElementSpeed * Time.deltaTime;
         else
             curElementValue = 0;
+    }
+
+    public void ReleaseElement(float shootValue)
+    {
+        if (curElementValue > shootValue)
+            curElementValue -= shootValue;
+    }
+
+    public void ResetElement()
+    {
+        curElementValue = 0;
     }
 }

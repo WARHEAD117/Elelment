@@ -8,6 +8,10 @@ public class PowerScript : MonoBehaviour {
     public float PowerRange = 3;
     Color ElementColor;
     ElementType PowerElement;
+    public Transform initTransform;
+
+    public GameObject PowerBallPrefab;
+    public float ShootSpeed = 50;
     // Use this for initialization
     void Start () {
 		
@@ -26,32 +30,12 @@ public class PowerScript : MonoBehaviour {
         PowerElement = element;
     }
 
-    public void UsePower()
+    public void UsePower(float shootValue)
     {
-        Collider[] PoweredColliders = Physics.OverlapSphere(transform.position, PowerRange);
-        List<GameObject> ColliderList = new List<GameObject>();
-        foreach (Collider collider in PoweredColliders)
-        {
-            if (collider.gameObject.tag == "Element" && !collider.isTrigger)
-            //if (collider.gameObject.tag != "Ground" && !collider.isTrigger && collider.gameObject.tag != "Player")
-            {
-                MeshRenderer mr = collider.gameObject.GetComponent<MeshRenderer>();
-                ElementScript es = collider.gameObject.GetComponent<ElementScript>();
-                if (es)
-                {
-                    ColliderList.Add(collider.gameObject);
-                    //ElementColor = mr.material.color;
-                }
-                break;
-            }
-        }
-
-        foreach(GameObject collider in ColliderList)
-        {
-            ElementScript es = collider.gameObject.GetComponent<ElementScript>();
-
-            es.SetPowerElement(PowerElement);
-        }
-
+        GameObject newPowerBall = GameObject.Instantiate(PowerBallPrefab, initTransform.position, Quaternion.identity);
+        PowerBall powerBallScript = newPowerBall.GetComponent<PowerBall>();
+        powerBallScript.SetDirection(this.transform.forward);
+        powerBallScript.SetElement(PowerElement, shootValue);
+        powerBallScript.SetSpeed(ShootSpeed);
     }
 }
