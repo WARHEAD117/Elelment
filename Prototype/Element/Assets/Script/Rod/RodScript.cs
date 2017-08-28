@@ -7,7 +7,7 @@ public class RodScript : MonoBehaviour {
     public GameObject RodSensor;
     public MeshRenderer RodRenderer;
     public GameObject RodForward;
-    public Material RodMaterial;
+    Material RodMaterial;
 
     public float RodSensorAngle = 90;
 
@@ -18,8 +18,8 @@ public class RodScript : MonoBehaviour {
 
     // Use this for initialization
     void Start () {
-		
-	}
+        RodMaterial = this.GetComponent<MeshRenderer>().material;
+    }
 	
 	// Update is called once per frame
 	void Update () {

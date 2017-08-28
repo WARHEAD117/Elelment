@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class PowerScript : MonoBehaviour {
 
-    public Material PowerMat;
+    Material PowerMat;
     public float PowerRange = 3;
     Color ElementColor;
     ElementType PowerElement;

@@ -17,7 +17,7 @@ public class UIScript : MonoBehaviour {
     void Update()
     {
         string elementType = MyPlayer.GetElementType().ToString();
-        string element = MyPlayer.GetElementValue().ToString();
+        string element = ((int)MyPlayer.GetElementValue()).ToString();
         string maxElement = MyPlayer.GetMaxElementValue().ToString();
         ElementValueText.text = "Element:" + elementType + "-" + element + "/" + maxElement;
 

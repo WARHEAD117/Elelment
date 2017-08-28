@@ -132,9 +132,9 @@ public class PlayerScript : MonoBehaviour {
         {
             Color RodColor = PlayerRod.GetElementColor();
             ElementType RodElement = PlayerRod.GetElement();
-            PlayerContainer.SetContainerElement(RodElement);
+            //PlayerContainer.SetContainerElement(RodElement);
 
-            PlayerContainer.KeepGetElement();
+            PlayerContainer.KeepGetElement(RodElement);
         }
     }
 

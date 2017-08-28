@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class ContainerScript : MonoBehaviour {
 
-    public Material ContainerMat;
+    Material ContainerMat;
     Color ElementColor;
     Color ElementBaseColor = Color.black;
     ElementType ContainerElement;
@@ -16,6 +16,7 @@ public class ContainerScript : MonoBehaviour {
 
     // Use this for initialization
     void Start () {
+        ContainerMat = this.GetComponent<MeshRenderer>().material;
         ContainerElement = ElementType.NONE;
 	}
 	
@@ -60,13 +61,18 @@ public class ContainerScript : MonoBehaviour {
     }
     public bool CanRelease(float shootValue)
     {
-        return curElementValue > shootValue ? true : false;
+        return curElementValue >= shootValue ? true : false;
     }
 
-    public void KeepGetElement()
+    public void KeepGetElement(ElementType element)
     {
+        if (ContainerElement != element)
+        {
+            ContainerElement = element;
+            curElementValue = 0;
+        }
         if (curElementValue < maxElementValue)
-            curElementValue += (int)(getElementSpeed * Time.deltaTime);
+            curElementValue += (getElementSpeed * Time.deltaTime);
         else
             curElementValue = maxElementValue;
     }
@@ -81,7 +87,7 @@ public class ContainerScript : MonoBehaviour {
 
     public void ReleaseElement(float shootValue)
     {
-        if (curElementValue > shootValue)
+        if (curElementValue >= shootValue)
             curElementValue -= shootValue;
     }
 
