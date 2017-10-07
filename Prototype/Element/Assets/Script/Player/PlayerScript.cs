@@ -18,6 +18,8 @@ public class PlayerScript : MonoBehaviour {
 
     int CoinCount = 0;
 
+    public GameObject SwordObj;
+
     // Use this for initialization
     void Start () {
 
@@ -35,7 +37,7 @@ public class PlayerScript : MonoBehaviour {
         float h = Input.GetAxis("Horizontal");
         float v = Input.GetAxis("Vertical");
 
-        Debug.Log(h + "--" + v);
+        //Debug.Log(h + "--" + v);
 
         
         if (cc.isGrounded)
@@ -82,29 +84,16 @@ public class PlayerScript : MonoBehaviour {
         cc.Move(moveDir * Time.deltaTime);
 
         UpdateRod();
+
         if (PlayerPower)
         {
             CooldownTimer -= Time.deltaTime;
             CooldownTimer = CooldownTimer < 0 ? 0 : CooldownTimer;
             Debug.Log(CooldownTimer);
-            if (PlayerContainer.CanRelease(ShootValue) && Input.GetKeyDown(KeyCode.G))
-            {
-                if (CooldownTimer == 0)
-                {
-                    PlayerContainer.ReleaseElement(ShootValue);
-                    UsePower(ShootValue);
-                    //PlayerPower.gameObject.SetActive(true);
-                    CooldownTimer = CooldownTime;
-                }
-        
-            }
-            else
-            {
-                PlayerPower.gameObject.SetActive(false);
-            }
+
         }
 
-        if(leaveInTrigger && leaveOutTrigger)
+        if (leaveInTrigger && leaveOutTrigger)
         {
             if(inDoorObj == outDoorObj)
             {
@@ -125,17 +114,7 @@ public class PlayerScript : MonoBehaviour {
 
     private void UpdateRod()
     {
-        if (!PlayerRod || !PlayerContainer)
-            return;
-
-        if(Input.GetKey(KeyCode.F) && PlayerRod.CanGetElement)
-        {
-            Color RodColor = PlayerRod.GetElementColor();
-            ElementType RodElement = PlayerRod.GetElement();
-            //PlayerContainer.SetContainerElement(RodElement);
-
-            PlayerContainer.KeepGetElement(RodElement);
-        }
+        
     }
 
     private void UsePower(float shootValue)
@@ -147,6 +126,52 @@ public class PlayerScript : MonoBehaviour {
         PlayerPower.SetElement(ContainerElement);
 
         PlayerPower.UsePower(shootValue);
+    }
+
+    public void ReleasePower(float shootValue)
+    {
+        if (PlayerContainer.CanRelease(ShootValue))
+        {
+            if (CooldownTimer == 0)
+            {
+                PlayerContainer.ReleaseElement(ShootValue);
+                UsePower(ShootValue);
+                //PlayerPower.gameObject.SetActive(true);
+                CooldownTimer = CooldownTime;
+            }
+
+        }
+        else
+        {
+            PlayerPower.gameObject.SetActive(false);
+        }
+        moveDir = Vector3.zero;
+    }
+
+    public void AbsorePower()
+    {
+        if (!PlayerRod || !PlayerContainer)
+            return;
+
+        if (PlayerRod.CanGetElement)
+        {
+            moveDir = Vector3.zero;
+            Color RodColor = PlayerRod.GetElementColor();
+            ElementType RodElement = PlayerRod.GetElement();
+            //PlayerContainer.SetContainerElement(RodElement);
+
+            PlayerContainer.KeepGetElement(RodElement);
+        }
+    }
+
+    public void CreateSword()
+    {
+        SwordObj.SetActive(true);
+    }
+
+    public void RemoveSword()
+    {
+        SwordObj.SetActive(false);
     }
 
     public float GetElementValue()
