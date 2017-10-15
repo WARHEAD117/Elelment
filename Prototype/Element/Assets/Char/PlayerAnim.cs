@@ -26,17 +26,25 @@ public class PlayerAnim : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-        if (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.W))
+        player.SetPlayerState(PlayerScript.PlayerState.IDLE);
+
+
+        float h = Input.GetAxis("Horizontal");
+        float v = Input.GetAxis("Vertical");
+        if (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.W) || h!=0 || v != 0)
         {
+            player.SetPlayerState(PlayerScript.PlayerState.RUN);
             anim.SetFloat("MoveSpeed", 1);
         }
         else
         {
+            player.SetPlayerState(PlayerScript.PlayerState.IDLE);
             anim.SetFloat("MoveSpeed", 0);
         }
 
-        if (Input.GetKey(KeyCode.F))
+        if (Input.GetKey(KeyCode.F) || Input.GetButton("Fire1") )
         {
+            player.SetPlayerState(PlayerScript.PlayerState.ABSORB);
             anim.SetBool("Absorb", true);
             anim.SetFloat("MoveSpeed", 0);
         }
@@ -45,8 +53,9 @@ public class PlayerAnim : MonoBehaviour {
             anim.SetBool("Absorb", false);
         }
 
-        if (Input.GetKey(KeyCode.G))
+        if (Input.GetKey(KeyCode.G) || Input.GetButton("Fire2"))
         {
+            player.SetPlayerState(PlayerScript.PlayerState.RELEASE);
             anim.SetBool("Release", true);
             anim.SetFloat("MoveSpeed", 0);
         }
@@ -55,8 +64,9 @@ public class PlayerAnim : MonoBehaviour {
             anim.SetBool("Release", false);
         }
         
-        if (Input.GetKeyDown(KeyCode.T))
+        if (Input.GetKeyDown(KeyCode.T) || Input.GetButtonDown("Fire3"))
         {
+            player.SetPlayerState(PlayerScript.PlayerState.SWORD);
             anim.SetBool("Sword",true);
         }
         else
@@ -73,6 +83,27 @@ public class PlayerAnim : MonoBehaviour {
         }
         player.ReleasePower(5);
     }
+
+    public void StartReleasePower()
+    {
+        if (!player)
+        {
+            return;
+            Debug.Log("No PlayerScript");
+        }
+        player.StartReleasePower();
+    }
+
+    public void EndReleasePower()
+    {
+        if (!player)
+        {
+            return;
+            Debug.Log("No PlayerScript");
+        }
+        player.EndReleasePower();
+    }
+
     void AbsorbPower(float shootValue)
     {
         if (!player)
@@ -100,6 +131,47 @@ public class PlayerAnim : MonoBehaviour {
             Debug.Log("No PlayerScript");
         }
         player.RemoveSword();
+
+    }
+
+    void StartRelease()
+    {
+        if (!player)
+        {
+            return;
+            Debug.Log("No PlayerScript");
+        }
+        player.StartRelease();
+
+    }
+    void FinishRelease()
+    {
+        if (!player)
+        {
+            return;
+            Debug.Log("No PlayerScript");
+        }
+        player.FinishRelease();
+
+    }
+    void StartAbsorb()
+    {
+        if (!player)
+        {
+            return;
+            Debug.Log("No PlayerScript");
+        }
+        player.StartAbsorb();
+
+    }
+    void FinishAbsorb()
+    {
+        if (!player)
+        {
+            return;
+            Debug.Log("No PlayerScript");
+        }
+        player.FinishAbsorb();
 
     }
 }

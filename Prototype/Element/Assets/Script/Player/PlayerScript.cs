@@ -4,10 +4,26 @@ using UnityEngine;
 
 public class PlayerScript : MonoBehaviour {
 
+    public enum PlayerState
+    {
+        IDLE,
+        WALK,
+        RUN,
+        ABSORB,
+        RELEASE,
+        SWORD,
+    }
+    PlayerState playerState;
+
+    bool canFinishRelease = true;
+    bool canFinishAbsorb = true;
+    bool isReleasePower = false;
+
     CharacterController cc = new CharacterController();
     public RodScript PlayerRod;
     public ContainerScript PlayerContainer;
     public PowerScript PlayerPower;
+    public SwordScript PlayerSword;
     public float PlayerSpeed = 10.0f;
     public float PlayerGravity = 15.0f;
 
@@ -22,7 +38,7 @@ public class PlayerScript : MonoBehaviour {
 
     // Use this for initialization
     void Start () {
-
+        playerState = PlayerState.IDLE;
         cc = GetComponent<CharacterController>();
     }
     Vector3 moveDir = new Vector3();
@@ -50,13 +66,39 @@ public class PlayerScript : MonoBehaviour {
             cameraRight.y = 0;
             cameraRight = cameraRight.normalized;
 
-            //水平に入力はカメラの左右方向、垂直入力はカメラの前後方向に移動
-            moveDir = h * cameraRight + v * cameraForward;
-            moveDir = moveDir.normalized;
+            if(!canFinishRelease)
+            {
+                playerState = PlayerState.RELEASE;
+            }
+            if (!canFinishAbsorb)
+            {
+                playerState = PlayerState.ABSORB;
+            }
 
-            moveDir *= PlayerSpeed;
 
-            moveDir.y = -0.001f;
+            if (playerState == PlayerState.RUN || playerState == PlayerState.WALK)
+            {
+                //水平に入力はカメラの左右方向、垂直入力はカメラの前後方向に移動
+                moveDir = h * cameraRight + v * cameraForward;
+                moveDir = moveDir.normalized;
+
+                moveDir *= PlayerSpeed;
+
+                moveDir.y = -0.001f;
+            }
+            else
+            {
+                moveDir.x = 0;
+                moveDir.z = 0;
+            }
+
+            if(playerState == PlayerState.RELEASE)
+            {
+                if(isReleasePower)
+                {
+                    ReleasePower(10);
+                }
+            }
         }
         else
         {
@@ -102,6 +144,12 @@ public class PlayerScript : MonoBehaviour {
         }
         
     }
+
+    public void SetPlayerState(PlayerState state)
+    {
+        playerState = state;
+    }
+
     private void ResetElement()
     {
         leaveInTrigger = false;
@@ -167,11 +215,47 @@ public class PlayerScript : MonoBehaviour {
     public void CreateSword()
     {
         SwordObj.SetActive(true);
+        if (PlayerContainer.CanRelease(ShootValue))
+        {
+            ElementType ContainerElement = PlayerContainer.GetContainerElement();
+            PlayerContainer.ReleaseElement(ShootValue - PlayerSword.GetSwordValue());
+            PlayerSword.SetElement(ContainerElement, ShootValue - PlayerSword.GetSwordValue());
+        }
     }
 
     public void RemoveSword()
     {
         SwordObj.SetActive(false);
+    }
+
+    public void StartReleasePower()
+    {
+        isReleasePower = true;
+    }
+
+    public void EndReleasePower()
+    {
+        isReleasePower = false;
+    }
+
+    public void StartRelease()
+    {
+        canFinishRelease = false;
+    }
+
+    public void FinishRelease()
+    {
+        canFinishRelease = true;
+    }
+
+    public void StartAbsorb()
+    {
+        canFinishAbsorb = false;
+    }
+
+    public void FinishAbsorb()
+    {
+        canFinishAbsorb = true;
     }
 
     public float GetElementValue()

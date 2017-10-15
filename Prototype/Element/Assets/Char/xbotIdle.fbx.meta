@@ -197,7 +197,23 @@ ModelImporter:
       mirror: 0
       bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
       curves: []
-      events: []
+      events:
+      - time: 0
+        functionName: FinishAbsorb
+        data: 
+        objectReferenceParameter: {fileID: 11500000, guid: d9cb686ab4b666e4d9ea8edde47f50a4,
+          type: 3}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
+      - time: 0
+        functionName: FinishRelease
+        data: 
+        objectReferenceParameter: {fileID: 11500000, guid: d9cb686ab4b666e4d9ea8edde47f50a4,
+          type: 3}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
       transformMask:
       - path: 
         weight: 1
