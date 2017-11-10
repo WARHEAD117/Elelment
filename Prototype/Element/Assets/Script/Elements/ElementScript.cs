@@ -101,7 +101,7 @@ public class ElementScript : MonoBehaviour {
         {
             if (powerElement == ElementType.ICE)
             {
-                m_ElementType = ElementType.WATERICE;
+                m_ElementType = ElementType.ICE;
                 ElementValue = MaxElementValue;
             }
         }

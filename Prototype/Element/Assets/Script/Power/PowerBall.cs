@@ -38,6 +38,14 @@ public class PowerBall : MonoBehaviour {
                     ColliderList.Add(collider.gameObject);
                     //ElementColor = mr.material.color;
                 }
+                else
+                {
+                    ElementScript parent_es = collider.transform.parent.gameObject.GetComponent<ElementScript>();
+                    if (parent_es)
+                    {
+                        ColliderList.Add(parent_es.gameObject);
+                    }
+                }
             }
         }
 

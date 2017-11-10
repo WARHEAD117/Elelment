@@ -22,7 +22,7 @@ public class PowerScript : MonoBehaviour {
         ElementColor = ElementDefine.GetElementColor(PowerElement);
 
         ElementColor.a = 0.5f;
-        PowerMat.color = ElementColor;
+        //PowerMat.color = ElementColor;
     }
     
     public void SetElement(ElementType element)

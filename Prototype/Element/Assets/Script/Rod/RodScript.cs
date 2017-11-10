@@ -18,12 +18,12 @@ public class RodScript : MonoBehaviour {
 
     // Use this for initialization
     void Start () {
-        RodMaterial = this.GetComponent<MeshRenderer>().material;
+        //RodMaterial = this.GetComponent<MeshRenderer>().material;
     }
 	
 	// Update is called once per frame
 	void Update () {
-        Collider[] RodSensorColliders = Physics.OverlapSphere(RodSensor.transform.position, 1.0f);
+        Collider[] RodSensorColliders = Physics.OverlapSphere(RodSensor.transform.position, 2.0f);
         List<Collider> ColliderList = new List<Collider>();
         foreach (Collider collider in RodSensorColliders)
         {
@@ -38,6 +38,14 @@ public class RodScript : MonoBehaviour {
                         //DrawLine(RodSensor.transform.position, hitPoint, ElementColor, ElementColor);
                         ColliderList.Add(collider);
                         //ElementColor = mr.material.color;
+                    }
+                }
+                else
+                {
+                    ElementScript parent_es = collider.transform.parent.gameObject.GetComponent<ElementScript>();
+                    if(parent_es)
+                    {
+                        ColliderList.Add(collider);
                     }
                 }
             }
@@ -69,6 +77,19 @@ public class RodScript : MonoBehaviour {
 
                 Vector3 hitPoint = closestObj.ClosestPoint(RodSensor.transform.position);
                 DrawLine(RodSensor.transform.position, hitPoint, ElementColor, ElementColor);
+            }
+            else
+            {
+                ElementScript parent_es = closestObj.transform.parent.gameObject.GetComponent<ElementScript>();
+                if (parent_es)
+                {
+                    CanGetElement = true;
+                    RodElement = parent_es.GetElementType();
+                    ElementColor = ElementDefine.GetElementColor(RodElement);
+
+                    Vector3 hitPoint = closestObj.ClosestPoint(RodSensor.transform.position);
+                    DrawLine(RodSensor.transform.position, hitPoint, ElementColor, ElementColor);
+                }
             }
         }
         else

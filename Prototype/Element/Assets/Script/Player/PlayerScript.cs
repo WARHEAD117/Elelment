@@ -96,7 +96,7 @@ public class PlayerScript : MonoBehaviour {
             {
                 if(isReleasePower)
                 {
-                    ReleasePower(10);
+                    //ReleasePower(10);
                 }
             }
         }
