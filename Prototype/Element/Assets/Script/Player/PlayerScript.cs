@@ -131,7 +131,7 @@ public class PlayerScript : MonoBehaviour {
         {
             CooldownTimer -= Time.deltaTime;
             CooldownTimer = CooldownTimer < 0 ? 0 : CooldownTimer;
-            Debug.Log(CooldownTimer);
+            //Debug.Log(CooldownTimer);
 
         }
 
