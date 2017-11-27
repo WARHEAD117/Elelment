@@ -88,6 +88,7 @@ public class RodScript : MonoBehaviour {
                     ElementColor = ElementDefine.GetElementColor(RodElement);
 
                     Vector3 hitPoint = closestObj.ClosestPoint(RodSensor.transform.position);
+                    hitPoint = closestObj.transform.position;
                     DrawLine(RodSensor.transform.position, hitPoint, ElementColor, ElementColor);
                 }
             }

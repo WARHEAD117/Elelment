@@ -52,7 +52,7 @@ public class FireEnemy : MonoBehaviour {
 
 	void OnTriggerEnter (Collider other){
 		if (other.gameObject.tag == "Player") {
-			PlayerInAttackRange = true;
+			//PlayerInAttackRange = true;
 		}
 	}
 
@@ -62,8 +62,33 @@ public class FireEnemy : MonoBehaviour {
 		}
 	}
 
+    public void AreaEnter(int id)
+    {
+        if (id == 1)
+        {
+            PlayerInChaseRange = true;
+            Debug.Log("Found you!");
+        }
+        else if (id == 0)
+        {
+            PlayerInAttackRange = true;
+            Debug.Log("FireAttack!");
+        }
+    }
+    public void AreaExit(int id)
+    {
+        if (id == 1)
+        {
+            PlayerInChaseRange = false;
+            Debug.Log("Lost Sight");
+        }
+        else if (id == 0)
+        {
+            PlayerInAttackRange = false;
+        }
+    }
 
-	void Chase(){
+    void Chase(){
 		nav.SetDestination (player.position);
 	}
 

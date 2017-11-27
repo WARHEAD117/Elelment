@@ -64,7 +64,7 @@ public class ElementScript : MonoBehaviour {
     {
 
     }
-    public void SetPowerElement(ElementType powerElement, float elementValue)
+    public bool SetPowerElement(ElementType powerElement, float elementValue)
     {
         if (m_ElementType == ElementType.FIRE)
         {
@@ -72,6 +72,7 @@ public class ElementScript : MonoBehaviour {
             {
                 ElementValue -= elementValue;
                 ElementValue = ElementValue < 0 ? 0 : ElementValue;
+                return true;
             }
         }
         if (m_ElementType == ElementType.GRASS)
@@ -80,6 +81,7 @@ public class ElementScript : MonoBehaviour {
             {
                 ElementValue -= elementValue;
                 ElementValue = ElementValue < 0 ? 0 : ElementValue;
+                return true;
             }
         }
         if (m_ElementType == ElementType.ICE)
@@ -88,6 +90,7 @@ public class ElementScript : MonoBehaviour {
             {
                 ElementValue -= elementValue;
                 ElementValue = ElementValue < 0 ? 0 : ElementValue;
+                return true;
             }
         }
         if (m_ElementType == ElementType.GRASS)
@@ -96,6 +99,7 @@ public class ElementScript : MonoBehaviour {
             {
                 m_ElementType = ElementType.FIRE;
                 ElementValue = MaxElementValue;
+                return true;
             }
         } if (m_ElementType == ElementType.WATER)
         {
@@ -103,8 +107,10 @@ public class ElementScript : MonoBehaviour {
             {
                 m_ElementType = ElementType.ICE;
                 ElementValue = MaxElementValue;
+                return true;
             }
         }
+        return false;
     }
     public void SetPowerElement(ElementType powerElement)
     {
@@ -150,4 +156,15 @@ public class ElementScript : MonoBehaviour {
             }
         }
     }
+    
+    public float GetMaxElementValue()
+    {
+        return MaxElementValue;
+    }
+
+    public float GetElementValue()
+    {
+        return ElementValue;
+    }
+
 }

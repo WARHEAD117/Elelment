@@ -4,24 +4,33 @@ using UnityEngine;
 
 public class SwordScript : MonoBehaviour {
 
-
+    public GameObject SwordObject;
     public MeshRenderer PowerRenderer;
 
     float AttackValue = 0;
 
-    ElementType PowerElement;
+    ElementType SwordElement = ElementType.NONE;
 
-    public Transform boundTrans;
+    Transform boundTrans;
+
+    public PlayerScript player;
     // Use this for initialization
     void Start () {
-		
-	}
+        SwordElement = ElementType.NONE;
+
+        SwordObject.SetActive(false);
+    }
 	
 	// Update is called once per frame
-	void Update () {
+	void Update ()
+    {
+        SwordElement = player.GetElementType();
+        boundTrans = SwordObject.transform;
 
-        PowerRenderer.material.color = ElementDefine.GetElementColor(PowerElement);
+        if (AttackValue == 0)
+            return;
 
+        PowerRenderer.material.color = ElementDefine.GetElementColor(SwordElement);
         Collider[] PoweredColliders = Physics.OverlapBox(boundTrans.position, boundTrans.localScale);
         List<GameObject> ColliderList = new List<GameObject>();
         foreach (Collider collider in PoweredColliders)
@@ -36,6 +45,14 @@ public class SwordScript : MonoBehaviour {
                     ColliderList.Add(collider.gameObject);
                     //ElementColor = mr.material.color;
                 }
+                else
+                {
+                    ElementScript parent_es = collider.transform.parent.gameObject.GetComponent<ElementScript>();
+                    if (parent_es)
+                    {
+                        ColliderList.Add(parent_es.gameObject);
+                    }
+                }
             }
         }
 
@@ -44,19 +61,29 @@ public class SwordScript : MonoBehaviour {
             ElementScript es = collider.gameObject.GetComponent<ElementScript>();
 
             //es.SetPowerElement(PowerElement);
-            es.SetPowerElement(PowerElement, AttackValue);
+
+            float curElementValue = player.GetElementValue();
+
+            es.SetPowerElement(SwordElement, Mathf.Min(curElementValue, AttackValue));
+            player.ReleaseElement(Mathf.Min(curElementValue, AttackValue));
             AttackValue = 0;
         }
     }
-
-    public void SetElement(ElementType element, float eValue)
-    {
-        PowerElement = element;
-        AttackValue = eValue;
-    }
-
+    
     public float GetSwordValue()
     {
         return AttackValue;
+    }
+
+    public void ActiveSword()
+    {
+        SwordObject.SetActive(true);
+        AttackValue = player.GetSwordAtk();
+    }
+
+    public void DeactiveSword()
+    {
+        SwordObject.SetActive(false);
+        AttackValue = 0;
     }
 }

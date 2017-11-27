@@ -15,9 +15,12 @@ public class PlayerScript : MonoBehaviour {
     }
     PlayerState playerState;
 
+
+    bool canSword = true;
     bool canFinishRelease = true;
     bool canFinishAbsorb = true;
     bool isReleasePower = false;
+    bool isAbsorbPower = false;
 
     CharacterController cc = new CharacterController();
     public RodScript PlayerRod;
@@ -27,7 +30,8 @@ public class PlayerScript : MonoBehaviour {
     public float PlayerSpeed = 10.0f;
     public float PlayerGravity = 15.0f;
 
-    public float ShootValue = 10;
+    public float ShootAtk = 10;
+    public float SwordAtk = 30;
 
     public float CooldownTime = 1.0f;
     float CooldownTimer = 0;
@@ -98,6 +102,10 @@ public class PlayerScript : MonoBehaviour {
                 {
                     //ReleasePower(10);
                 }
+            }
+            if(!isAbsorbPower && !isReleasePower)
+            {
+                canSword = true;
             }
         }
         else
@@ -178,12 +186,12 @@ public class PlayerScript : MonoBehaviour {
 
     public void ReleasePower(float shootValue)
     {
-        if (PlayerContainer.CanRelease(ShootValue))
+        if (PlayerContainer.CanRelease(ShootAtk))
         {
             if (CooldownTimer == 0)
             {
-                PlayerContainer.ReleaseElement(ShootValue);
-                UsePower(ShootValue);
+                PlayerContainer.ReleaseElement(ShootAtk);
+                UsePower(ShootAtk);
                 //PlayerPower.gameObject.SetActive(true);
                 CooldownTimer = CooldownTime;
             }
@@ -214,48 +222,36 @@ public class PlayerScript : MonoBehaviour {
 
     public void CreateSword()
     {
-        SwordObj.SetActive(true);
-        if (PlayerContainer.CanRelease(ShootValue))
-        {
-            ElementType ContainerElement = PlayerContainer.GetContainerElement();
-            PlayerContainer.ReleaseElement(ShootValue - PlayerSword.GetSwordValue());
-            PlayerSword.SetElement(ContainerElement, ShootValue - PlayerSword.GetSwordValue());
-        }
+        PlayerSword.ActiveSword();
     }
 
     public void RemoveSword()
     {
-        SwordObj.SetActive(false);
-    }
-
-    public void StartReleasePower()
-    {
-        isReleasePower = true;
-    }
-
-    public void EndReleasePower()
-    {
-        isReleasePower = false;
+        PlayerSword.DeactiveSword();
     }
 
     public void StartRelease()
     {
+        isReleasePower = true;
         canFinishRelease = false;
     }
 
     public void FinishRelease()
     {
         canFinishRelease = true;
+        isReleasePower = false;
     }
 
     public void StartAbsorb()
     {
         canFinishAbsorb = false;
+        isAbsorbPower = true;
     }
 
     public void FinishAbsorb()
     {
         canFinishAbsorb = true;
+        isAbsorbPower = false;
     }
 
     public float GetElementValue()
@@ -278,6 +274,16 @@ public class PlayerScript : MonoBehaviour {
         ElementType elementType = PlayerContainer.GetElementType();
         return elementType;
 
+    }
+
+    public float GetSwordAtk()
+    {
+        return SwordAtk;
+    }
+
+    public void ReleaseElement(float value)
+    {
+        PlayerContainer.ReleaseElement(value);
     }
 
     private bool leaveOutTrigger = false;
@@ -308,5 +314,10 @@ public class PlayerScript : MonoBehaviour {
     public int GetCoinCount()
     {
         return CoinCount;
+    }
+
+    public bool GetCanSword()
+    {
+        return canSword;
     }
 }

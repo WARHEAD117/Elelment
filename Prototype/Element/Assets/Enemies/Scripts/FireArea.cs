@@ -3,18 +3,17 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class FireArea : MonoBehaviour {
-
+    public int id = 1;
 	void OnTriggerEnter (Collider other){
 		if (other.gameObject.tag == "Player") {
-			GetComponentInParent<FireEnemy> ().PlayerInChaseRange = true;
-			Debug.Log ("Found you!");
+            this.gameObject.GetComponentInParent<FireEnemy>().AreaEnter(id);
 		}
 	}
 
 	void OnTriggerExit (Collider other){
-		if (other.gameObject.tag == "Player") {
-			GetComponentInParent<FireEnemy> ().PlayerInChaseRange = false;
-			Debug.Log ("Lost Sight");
-		}
+		if (other.gameObject.tag == "Player")
+        {
+            this.gameObject.GetComponentInParent<FireEnemy>().AreaExit(id);
+        }
 	}
 }

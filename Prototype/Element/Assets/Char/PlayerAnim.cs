@@ -23,7 +23,8 @@ public class PlayerAnim : MonoBehaviour {
             Debug.Log("No PlayerScript");
         }
     }
-	
+
+    bool startSword = false;
 	// Update is called once per frame
 	void Update () {
         player.SetPlayerState(PlayerScript.PlayerState.IDLE);
@@ -64,7 +65,7 @@ public class PlayerAnim : MonoBehaviour {
             anim.SetBool("Release", false);
         }
         
-        if (Input.GetKeyDown(KeyCode.T) || Input.GetButtonDown("Fire3"))
+        if (Input.GetKeyDown(KeyCode.T) || Input.GetButtonDown("Fire3") && player.GetCanSword())
         {
             player.SetPlayerState(PlayerScript.PlayerState.SWORD);
             anim.SetBool("Sword",true);
@@ -72,6 +73,25 @@ public class PlayerAnim : MonoBehaviour {
         else
         {
             anim.SetBool("Sword", false);
+        }
+
+        bool isSword = anim.GetCurrentAnimatorStateInfo(1).IsName("Sword");
+        if(isSword)
+        {
+
+            startSword = true;
+        }
+        else
+        {
+            startSword = false;
+        }
+        if(startSword)
+        {
+            anim.SetLayerWeight(1, 1);
+        }
+        else
+        {
+            anim.SetLayerWeight(1, 0);
         }
     }
     void ReleasePower(float shootValue)
@@ -84,26 +104,6 @@ public class PlayerAnim : MonoBehaviour {
         player.ReleasePower(5);
     }
 
-    public void StartReleasePower()
-    {
-        if (!player)
-        {
-            return;
-            Debug.Log("No PlayerScript");
-        }
-        player.StartReleasePower();
-    }
-
-    public void EndReleasePower()
-    {
-        if (!player)
-        {
-            return;
-            Debug.Log("No PlayerScript");
-        }
-        player.EndReleasePower();
-    }
-
     void AbsorbPower(float shootValue)
     {
         if (!player)
@@ -113,26 +113,7 @@ public class PlayerAnim : MonoBehaviour {
         }
         player.AbsorePower();
     }
-    void CreateSword()
-    {
-        if (!player)
-        {
-            return;
-            Debug.Log("No PlayerScript");
-        }
-        player.CreateSword();
-    }
-
-    void RemoveSword()
-    {
-        if (!player)
-        {
-            return;
-            Debug.Log("No PlayerScript");
-        }
-        player.RemoveSword();
-
-    }
+    
 
     void StartRelease()
     {
@@ -174,4 +155,26 @@ public class PlayerAnim : MonoBehaviour {
         player.FinishAbsorb();
 
     }
+
+    void RemoveSword()
+    {
+        if (!player)
+        {
+            return;
+            Debug.Log("No PlayerScript");
+        }
+        player.RemoveSword();
+
+    }
+
+    void CreateSword()
+    {
+        if (!player)
+        {
+            return;
+            Debug.Log("No PlayerScript");
+        }
+        player.CreateSword();
+    }
+
 }

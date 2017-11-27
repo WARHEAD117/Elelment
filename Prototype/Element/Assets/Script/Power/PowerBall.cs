@@ -13,15 +13,19 @@ public class PowerBall : MonoBehaviour {
     ElementType PowerElement;
 
     public MeshRenderer PowerRenderer;
-	
+
+    public float ShootRange = 10;
+    float fliedDis = 0;
+
     // Use this for initialization
-	void Start () {
+    void Start () {
 	}
 	
 	// Update is called once per frame
 	void Update () {
-
+        fliedDis += moveSpeed * Time.deltaTime;
         this.transform.position += ShootDirection * moveSpeed * Time.deltaTime;
+
         PowerRenderer.material.color = ElementDefine.GetElementColor(PowerElement);
 
         Collider[] PoweredColliders = Physics.OverlapSphere(transform.position, hitRange);
@@ -54,7 +58,14 @@ public class PowerBall : MonoBehaviour {
             ElementScript es = collider.gameObject.GetComponent<ElementScript>();
 
             //es.SetPowerElement(PowerElement);
-            es.SetPowerElement(PowerElement, BallValue);
+            bool canSet = es.SetPowerElement(PowerElement, BallValue);
+            if(canSet)
+                Destroy(this.gameObject);
+            return;
+        }
+
+        if(fliedDis >= ShootRange)
+        {
             Destroy(this.gameObject);
         }
 	}
