@@ -3,19 +3,20 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class WaterArea : MonoBehaviour {
-
+	
 	void OnTriggerEnter (Collider other){
+		int id = 0;
 		if (other.gameObject.tag == "Player") {
-			GetComponentInParent<WaterEnemy> ().PlayerInChaseRange = true;
-			Debug.Log ("Found you!");
+			this.gameObject.GetComponentInParent<WaterEnemy>().AreaEnter(id);
 		}
 	}
 
-	void OnTriggerExit (Collider other){
-		if (other.gameObject.tag == "Player") {
-			GetComponentInParent<WaterEnemy> ().PlayerInChaseRange = false;
-			Debug.Log ("Lost Sight");
+	/*void OnTriggerExit (Collider other){
+		int id = 0;
+		if (other.gameObject.tag == "Player")
+		{
+			this.gameObject.GetComponentInParent<WaterEnemy>().AreaExit(id);
 		}
-	}
+	}*/
 }
 

@@ -11,6 +11,7 @@ public class FireEnemy : MonoBehaviour {
 	Transform player;
 	NavMeshAgent nav;
 	Vector3 HomePoint = new Vector3();
+	public bool Attacking;
 
 	public float MaxTravelDistance;
 
@@ -30,6 +31,7 @@ public class FireEnemy : MonoBehaviour {
 
 		if (Vector3.Distance (transform.position, HomePoint) > MaxTravelDistance) {
 			SelfNearHome = false;
+			Attacking = false;
 		} else {
 			SelfNearHome = true;
 		}
@@ -51,14 +53,16 @@ public class FireEnemy : MonoBehaviour {
 	}
 
 	void OnTriggerEnter (Collider other){
+		int id = 1;
 		if (other.gameObject.tag == "Player") {
-			//PlayerInAttackRange = true;
+			AreaEnter(id);
 		}
 	}
 
 	void OnTriggerExit (Collider other){
-		if (other.gameObject.tag == "Player") {
-			PlayerInAttackRange = false;
+		int id = 1;
+		if (other.gameObject.tag == "Player" && !Attacking) {
+			AreaExit(id);
 		}
 	}
 
@@ -72,7 +76,6 @@ public class FireEnemy : MonoBehaviour {
         else if (id == 0)
         {
             PlayerInAttackRange = true;
-            Debug.Log("FireAttack!");
         }
     }
     public void AreaExit(int id)
@@ -85,6 +88,7 @@ public class FireEnemy : MonoBehaviour {
         else if (id == 0)
         {
             PlayerInAttackRange = false;
+			Debug.Log("StopAttack");
         }
     }
 
@@ -94,6 +98,7 @@ public class FireEnemy : MonoBehaviour {
 
 	void AttackMelee(){
 		Debug.Log ("FireAttack!");
+		Attacking = true;
 	}
 
 	void ReturnHome(){

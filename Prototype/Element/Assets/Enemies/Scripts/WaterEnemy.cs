@@ -49,23 +49,48 @@ public class WaterEnemy : MonoBehaviour {
 	}
 
 	void OnTriggerEnter (Collider other){
+		int id = 1;
 		if (other.gameObject.tag == "Player") {
-			PlayerInAttackRange = true;
+			AreaEnter(id);
 		}
 	}
 
 	void OnTriggerExit (Collider other){
+		int id = 1;
 		if (other.gameObject.tag == "Player") {
-			PlayerInAttackRange = false;
+			AreaExit(id);
 		}
 	}
+
+	public void AreaEnter(int id)
+	{
+		if (id == 1)
+		{
+			PlayerInChaseRange = true;
+			Debug.Log("Found you!");
+		}
+		else if (id == 0)
+		{
+			PlayerInAttackRange = true;
+		}
+	}
+	public void AreaExit(int id)
+	{
+		if (id == 1)
+		{
+			PlayerInChaseRange = false;
+			Debug.Log("Lost Sight");
+		}
+	}
+
 
 	void Chase(){
 		nav.SetDestination (player.position);
 	}
 
 	void AttackMelee(){
-		Debug.Log ("WaterAttack!");
+		Debug.Log ("GameOver!");
+		Patrol ();
 	}
 
 	void ReturnHome(){
