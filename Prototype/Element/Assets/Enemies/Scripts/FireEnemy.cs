@@ -7,7 +7,6 @@ public class FireEnemy : MonoBehaviour {
 
 	public bool PlayerInChaseRange;
 	bool PlayerInAttackRange;
-	bool SelfNearHome;
 	Transform player;
 	NavMeshAgent nav;
 	Vector3 HomePoint = new Vector3();
@@ -23,26 +22,15 @@ public class FireEnemy : MonoBehaviour {
 
 		PlayerInChaseRange = false;
 		PlayerInAttackRange = false;
-		SelfNearHome = true;
 	}
 		
 	// Update is called once per frame
 	void Update () {
-
-		if (Vector3.Distance (transform.position, HomePoint) > MaxTravelDistance) {
-			SelfNearHome = false;
-			Attacking = false;
-		} else {
-			SelfNearHome = true;
-		}
-
-		if (PlayerInChaseRange && SelfNearHome){
+		if (PlayerInChaseRange){
 			Chase();
 			if (PlayerInAttackRange){
 				AttackMelee();
 			}
-		}else if (!SelfNearHome){
-			ReturnHome();
 		}else{
 			if (transform.position != HomePoint) {
 				ReturnHome ();
