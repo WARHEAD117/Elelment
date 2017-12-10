@@ -64,8 +64,8 @@ public class SwordScript : MonoBehaviour {
 
             float curElementValue = player.GetElementValue();
 
-            es.SetPowerElement(SwordElement, Mathf.Min(curElementValue, AttackValue));
-            player.ReleaseElement(Mathf.Min(curElementValue, AttackValue));
+            es.SetPowerElement(SwordElement, Mathf.Min(curElementValue, player.GetShootSpend()));
+            player.ReleaseElement(Mathf.Min(curElementValue, player.GetShootSpend()));
             AttackValue = 0;
         }
     }

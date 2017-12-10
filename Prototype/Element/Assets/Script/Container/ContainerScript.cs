@@ -28,6 +28,15 @@ public class ContainerScript : MonoBehaviour {
 
     }
 
+    public void SetMaxContainerValue(float value)
+    {
+        maxElementValue = value;
+    }
+    public float GetMaxContainerValue()
+    {
+        return maxElementValue;
+    }
+
     public ElementType GetElementType()
     {
         return ContainerElement;

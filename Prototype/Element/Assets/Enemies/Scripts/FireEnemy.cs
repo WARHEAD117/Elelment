@@ -39,21 +39,7 @@ public class FireEnemy : MonoBehaviour {
 			}
 		}
 	}
-
-	void OnTriggerEnter (Collider other){
-		int id = 1;
-		if (other.gameObject.tag == "Player") {
-			AreaEnter(id);
-		}
-	}
-
-	void OnTriggerExit (Collider other){
-		int id = 1;
-		if (other.gameObject.tag == "Player" && !Attacking) {
-			AreaExit(id);
-		}
-	}
-
+    
     public void AreaEnter(int id)
     {
         if (id == 1)

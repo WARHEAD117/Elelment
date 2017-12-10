@@ -69,6 +69,7 @@ public class PlayerAnim : MonoBehaviour {
         {
             player.SetPlayerState(PlayerScript.PlayerState.SWORD);
             anim.SetBool("Sword",true);
+            anim.SetFloat("SwordSpeed", player.GetSwordSpeed());
         }
         else
         {
@@ -88,10 +89,12 @@ public class PlayerAnim : MonoBehaviour {
         if(startSword)
         {
             anim.SetLayerWeight(1, 1);
+            player.CreateSword();
         }
         else
         {
             anim.SetLayerWeight(1, 0);
+            player.RemoveSword();
         }
     }
     void ReleasePower(float shootValue)
@@ -163,7 +166,7 @@ public class PlayerAnim : MonoBehaviour {
             return;
             Debug.Log("No PlayerScript");
         }
-        player.RemoveSword();
+        //player.RemoveSword();
 
     }
 
@@ -174,7 +177,7 @@ public class PlayerAnim : MonoBehaviour {
             return;
             Debug.Log("No PlayerScript");
         }
-        player.CreateSword();
+       // player.CreateSword();
     }
 
 }

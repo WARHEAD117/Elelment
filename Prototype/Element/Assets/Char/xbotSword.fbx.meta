@@ -198,7 +198,7 @@ ModelImporter:
       bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
       curves: []
       events:
-      - time: 0.021929825
+      - time: 0.03508772
         functionName: CreateSword
         data: 
         objectReferenceParameter: {fileID: 11500000, guid: d9cb686ab4b666e4d9ea8edde47f50a4,
@@ -206,7 +206,7 @@ ModelImporter:
         floatParameter: 0
         intParameter: 0
         messageOptions: 0
-      - time: 1
+      - time: 0.9649123
         functionName: RemoveSword
         data: 
         objectReferenceParameter: {fileID: 11500000, guid: d9cb686ab4b666e4d9ea8edde47f50a4,

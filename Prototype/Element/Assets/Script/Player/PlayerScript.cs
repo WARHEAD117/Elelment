@@ -31,14 +31,19 @@ public class PlayerScript : MonoBehaviour {
     public float PlayerGravity = 15.0f;
 
     public float ShootAtk = 10;
+    public float ShootSpend = 1;
     public float SwordAtk = 30;
+    public float SwordSpend = 5;
 
-    public float CooldownTime = 1.0f;
-    float CooldownTimer = 0;
+    public float ShootCooldownTime = 1.0f;
+    float ShootCooldownTimer = 0;
+
+    public float SwordSpeed = 1;
+
+    public float MaxContainerValue = 200;
+
 
     int CoinCount = 0;
-
-    public GameObject SwordObj;
 
     // Use this for initialization
     void Start () {
@@ -48,6 +53,30 @@ public class PlayerScript : MonoBehaviour {
     Vector3 moveDir = new Vector3();
     // Update is called once per frame
     void Update()
+    {
+        UpdateMove();
+        UpdateContainer();
+        UpdateRod();
+
+        if (PlayerPower)
+        {
+            ShootCooldownTimer -= Time.deltaTime;
+            ShootCooldownTimer = ShootCooldownTimer < 0 ? 0 : ShootCooldownTimer;
+            //Debug.Log(CooldownTimer);
+
+        }
+
+        if (leaveInTrigger && leaveOutTrigger)
+        {
+            if(inDoorObj == outDoorObj)
+            {
+                ResetElement();
+            }
+        }
+        
+    }
+
+    void UpdateMove()
     {
         if (!cc)
             return;
@@ -59,7 +88,7 @@ public class PlayerScript : MonoBehaviour {
 
         //Debug.Log(h + "--" + v);
 
-        
+
         if (cc.isGrounded)
         {
             Vector3 cameraForward = Camera.main.transform.forward;
@@ -70,7 +99,7 @@ public class PlayerScript : MonoBehaviour {
             cameraRight.y = 0;
             cameraRight = cameraRight.normalized;
 
-            if(!canFinishRelease)
+            if (!canFinishRelease)
             {
                 playerState = PlayerState.RELEASE;
             }
@@ -96,14 +125,14 @@ public class PlayerScript : MonoBehaviour {
                 moveDir.z = 0;
             }
 
-            if(playerState == PlayerState.RELEASE)
+            if (playerState == PlayerState.RELEASE)
             {
-                if(isReleasePower)
+                if (isReleasePower)
                 {
                     //ReleasePower(10);
                 }
             }
-            if(!isAbsorbPower && !isReleasePower)
+            if (!isAbsorbPower && !isReleasePower)
             {
                 canSword = true;
             }
@@ -132,25 +161,14 @@ public class PlayerScript : MonoBehaviour {
         moveDir.y -= PlayerGravity * Time.deltaTime;
 
         cc.Move(moveDir * Time.deltaTime);
+    }
 
-        UpdateRod();
+    void UpdateContainer()
+    {
+        if (!PlayerContainer)
+            return;
 
-        if (PlayerPower)
-        {
-            CooldownTimer -= Time.deltaTime;
-            CooldownTimer = CooldownTimer < 0 ? 0 : CooldownTimer;
-            //Debug.Log(CooldownTimer);
-
-        }
-
-        if (leaveInTrigger && leaveOutTrigger)
-        {
-            if(inDoorObj == outDoorObj)
-            {
-                ResetElement();
-            }
-        }
-        
+        PlayerContainer.SetMaxContainerValue(MaxContainerValue);
     }
 
     public void SetPlayerState(PlayerState state)
@@ -188,12 +206,12 @@ public class PlayerScript : MonoBehaviour {
     {
         if (PlayerContainer.CanRelease(ShootAtk))
         {
-            if (CooldownTimer == 0)
+            if (ShootCooldownTimer == 0)
             {
-                PlayerContainer.ReleaseElement(ShootAtk);
+                PlayerContainer.ReleaseElement(ShootSpend);
                 UsePower(ShootAtk);
                 //PlayerPower.gameObject.SetActive(true);
-                CooldownTimer = CooldownTime;
+                ShootCooldownTimer = ShootCooldownTime;
             }
 
         }
@@ -280,6 +298,19 @@ public class PlayerScript : MonoBehaviour {
     {
         return SwordAtk;
     }
+    public float GetSwordSpend()
+    {
+        return SwordSpend;
+    }
+
+    public float GetShootAtk()
+    {
+        return ShootAtk;
+    }
+    public float GetShootSpend()
+    {
+        return ShootSpend;
+    }
 
     public void ReleaseElement(float value)
     {
@@ -319,5 +350,10 @@ public class PlayerScript : MonoBehaviour {
     public bool GetCanSword()
     {
         return canSword;
+    }
+
+    public float GetSwordSpeed()
+    {
+        return SwordSpeed;
     }
 }

@@ -18,15 +18,16 @@ public class PowerBall : MonoBehaviour {
     float fliedDis = 0;
 
     // Use this for initialization
-    void Start () {
-	}
+    void Start ()
+    {
+        PowerRenderer.material.color = ElementDefine.GetElementColor(PowerElement);
+    }
 	
 	// Update is called once per frame
 	void Update () {
         fliedDis += moveSpeed * Time.deltaTime;
         this.transform.position += ShootDirection * moveSpeed * Time.deltaTime;
 
-        PowerRenderer.material.color = ElementDefine.GetElementColor(PowerElement);
 
         Collider[] PoweredColliders = Physics.OverlapSphere(transform.position, hitRange);
         List<GameObject> ColliderList = new List<GameObject>();
