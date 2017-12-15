@@ -16,7 +16,7 @@ public class FireEnemy : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		player = GameObject.FindGameObjectWithTag ("Player").transform;
+		player = GameObject.Find ("Player").transform;
 		nav = GetComponent <NavMeshAgent> ();
 		HomePoint = transform.position;
 
@@ -73,6 +73,13 @@ public class FireEnemy : MonoBehaviour {
 	void AttackMelee(){
 		Debug.Log ("FireAttack!");
 		Attacking = true;
+
+        //
+        PlayerScript ps = player.gameObject.GetComponent<PlayerScript>();
+        if(ps)
+        {
+            ps.GetAttacked(1);
+        }
 	}
 
 	void ReturnHome(){

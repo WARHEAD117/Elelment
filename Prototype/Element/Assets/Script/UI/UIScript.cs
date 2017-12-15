@@ -7,6 +7,7 @@ public class UIScript : MonoBehaviour {
 
     public PlayerScript MyPlayer;
     public Text ElementValueText;
+    public Text HPValueText;
     public Text CoinText;
 	// Use this for initialization
 	void Start () {
@@ -20,6 +21,10 @@ public class UIScript : MonoBehaviour {
         string element = ((int)MyPlayer.GetElementValue()).ToString();
         string maxElement = MyPlayer.GetMaxElementValue().ToString();
         ElementValueText.text = "Element:" + elementType + "-" + element + "/" + maxElement;
+
+        string playerMXHP = MyPlayer.GetPlayerMaxHP().ToString();
+        string playerHP = MyPlayer.GetPlayerHP().ToString();
+        HPValueText.text = "HP/MAXHP:" + playerHP + "/" + playerMXHP;
 
         string coinCount = MyPlayer.GetCoinCount().ToString();
         CoinText.text = "Coin:" + coinCount;

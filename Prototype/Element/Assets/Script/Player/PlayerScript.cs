@@ -42,6 +42,8 @@ public class PlayerScript : MonoBehaviour {
 
     public float MaxContainerValue = 200;
 
+    public float playerHP = 100;
+    public float playerMAXHP = 100;
 
     int CoinCount = 0;
 
@@ -355,5 +357,20 @@ public class PlayerScript : MonoBehaviour {
     public float GetSwordSpeed()
     {
         return SwordSpeed;
+    }
+
+    public float GetPlayerHP()
+    {
+        return playerHP;
+    }
+
+    public float GetPlayerMaxHP()
+    {
+        return playerMAXHP;
+    }
+
+    public void GetAttacked(float damage)
+    {
+        playerHP -= damage;
     }
 }
