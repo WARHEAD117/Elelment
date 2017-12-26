@@ -78,7 +78,8 @@ public class FireEnemy : MonoBehaviour {
         PlayerScript ps = player.gameObject.GetComponent<PlayerScript>();
         if(ps)
         {
-            ps.GetAttacked(1);
+            //ps.GetAttacked(1);
+            ps.GetAttackedWithHitVector(1, this.gameObject.transform.position);
         }
 	}
 
