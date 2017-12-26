@@ -12,6 +12,7 @@ public class PlayerScript : MonoBehaviour {
         ABSORB,
         RELEASE,
         SWORD,
+        KNOCKBACK
     }
     PlayerState playerState;
 
@@ -40,6 +41,24 @@ public class PlayerScript : MonoBehaviour {
 
     public float SwordSpeed = 1;
 
+    //ノックバックベクトル
+    Vector3 knockBackVec;
+    //ノックバックの方向ベクトル
+    public float knockBackDis = 2.0f;
+    float knockBackDisCounter = 2.0f;
+    //ノックバックの方向ベクトル
+    public float knockBackSpeed = 10.0f;
+
+    //無敵時間
+    public float invincibleTime = 5.0f;
+    float invincibleTimer = 0;
+    bool isInvincible = false;
+    //無敵の点滅時間
+    public float flashTime = 0.3f;
+    float flashTimer = 0;
+    bool flashFlag = false;
+
+
     public float MaxContainerValue = 200;
 
     public float playerHP = 100;
@@ -56,6 +75,63 @@ public class PlayerScript : MonoBehaviour {
     // Update is called once per frame
     void Update()
     {
+        //無敵状態
+        if (isInvincible)
+        {
+            //すべての子のMeshRendererとSkinnedMeshRendererを探す
+            MeshRenderer[] mrList = this.GetComponentsInChildren<MeshRenderer>();
+
+            SkinnedMeshRenderer[] smrList = this.GetComponentsInChildren<SkinnedMeshRenderer>();
+
+            //点滅表現
+            flashTimer += Time.deltaTime;
+            if (flashTimer > flashTime)
+            {
+                flashTimer = 0;
+                flashFlag = !flashFlag;
+            }
+            //MeshRendererとSkinnedMeshRendererを点滅にする
+            if (flashFlag)
+            {
+                foreach (MeshRenderer mr in mrList)
+                {
+                    //mr.enabled = true;
+                }
+                foreach (SkinnedMeshRenderer smr in smrList)
+                {
+                    smr.enabled = true;
+                }
+            }
+            else
+            {
+                foreach (MeshRenderer mr in mrList)
+                {
+                    //mr.enabled = false;
+                }
+                foreach (SkinnedMeshRenderer smr in smrList)
+                {
+                    smr.enabled = false;
+                }
+            }
+
+            //無敵状態が終わったら、最初状態に戻す
+            invincibleTimer += Time.deltaTime;
+            if (invincibleTimer > invincibleTime)
+            {
+                isInvincible = false;
+
+                foreach (MeshRenderer mr in mrList)
+                {
+                    //mr.enabled = true;
+                }
+
+                foreach (SkinnedMeshRenderer smr in smrList)
+                {
+                    smr.enabled = true;
+                }
+            }
+        }
+
         UpdateMove();
         UpdateContainer();
         UpdateRod();
@@ -138,6 +214,27 @@ public class PlayerScript : MonoBehaviour {
             {
                 canSword = true;
             }
+            if (playerState == PlayerState.KNOCKBACK)
+            {
+                //設定の距離にノックバック
+                if (knockBackDisCounter > 0)
+                {
+                    Vector3 playerback = -knockBackVec;
+                    playerback.y = 0;
+
+                    float knockSpeed = 10.0f;
+                    float knockDis = knockSpeed * Time.deltaTime;
+                    knockBackDisCounter -= knockDis;
+
+                    //ノックバックはキャラクターコントローラのMoveではなく、直接オブジェクトのTransformで移動させる
+                    moveDir = Vector3.zero;
+                    transform.position += playerback * knockDis;
+                }
+                else
+                {
+                    playerState = PlayerState.WALK;
+                }
+            }
         }
         else
         {
@@ -175,6 +272,7 @@ public class PlayerScript : MonoBehaviour {
 
     public void SetPlayerState(PlayerState state)
     {
+        if(playerState != PlayerState.KNOCKBACK)
         playerState = state;
     }
 
@@ -372,5 +470,22 @@ public class PlayerScript : MonoBehaviour {
     public void GetAttacked(float damage)
     {
         playerHP -= damage;
+    }
+
+    public void GetAttackedWithHitVector(float damage, Vector3 hitPoint)
+    {
+        knockBackVec = hitPoint - this.transform.position;
+        knockBackVec.y = 0;
+        knockBackDisCounter = knockBackDis;
+
+        playerState = PlayerState.KNOCKBACK;
+
+        if(!isInvincible)
+        {
+            playerHP -= damage;
+            isInvincible = true;
+            invincibleTimer = 0;
+            flashTimer = 0;
+        }
     }
 }
